@@ -1,6 +1,7 @@
 package com.chuwa.redbook.payload;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ public class PostDto {
      */
     @NotEmpty
     @Size(min = 2, message = "Post title should have at least 2 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9 ]+$", message = "Post title cannot contain special characters.")
     private String title;
 
     @NotEmpty
