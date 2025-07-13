@@ -2,6 +2,7 @@ package com.chuwa.redbook.service.impl;
 
 import com.chuwa.redbook.dao.PostRepository;
 import com.chuwa.redbook.entity.Post;
+import com.chuwa.redbook.exception.ResourceDuplicateException;
 import com.chuwa.redbook.exception.ResourceNotFoundException;
 import com.chuwa.redbook.payload.PostDto;
 import com.chuwa.redbook.payload.PostResponse;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +39,11 @@ public class PostServiceImpl implements PostService {
 
         // covert DTO to Entity
 //        Post post = mapToEntity(postDto);
+        Optional<Post> existingPost = postRepository.findByTitle(postDto.getTitle());
+        if (existingPost.isPresent()) {
+            throw new ResourceDuplicateException("Post", "title", postDto.getTitle());
+        }
+
         Post post = modelMapper.map(postDto, Post.class);
 
         // 调用Dao的save 方法，将entity的数据存储到数据库MySQL
