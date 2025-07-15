@@ -8,6 +8,8 @@ import com.chuwa.redbook.payload.PostDto;
 import com.chuwa.redbook.payload.PostResponse;
 import com.chuwa.redbook.service.PostService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PostServiceImpl implements PostService {
+    private static final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -36,7 +39,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto createPost(PostDto postDto) {
-
+        logger.info("<< createPost {}", postDto);
         // covert DTO to Entity
 //        Post post = mapToEntity(postDto);
         Optional<Post> existingPost = postRepository.findByTitle(postDto.getTitle());
@@ -52,7 +55,7 @@ public class PostServiceImpl implements PostService {
 
         // 将save() 返回的数据转换成controller/前端 需要的数据，然后return给controller
 //        PostDto postResponse = mapToDTO(savedPost);
-
+        logger.info(">> createPost");
         return modelMapper.map(savedPost, PostDto.class);
     }
 
@@ -62,8 +65,10 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostDto> getAllPost() {
+        logger.info("<< getAllPost");
         List<Post> posts = postRepository.findAll();
         List<PostDto> postDtos = posts.stream().map(post -> modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        logger.info(">> getAllPost");
         return postDtos;
     }
 
@@ -74,6 +79,7 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public PostDto getPostById(long id) {
+        logger.info("<< getPostById {}", id);
 //        Optional<Post> post = postRepository.findById(id);
 //        post.orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
 
@@ -81,31 +87,36 @@ public class PostServiceImpl implements PostService {
 
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
 
+        logger.info(">> getPostById");
         return modelMapper.map(post, PostDto.class);
     }
 
     @Override
     public PostDto updatePost(PostDto postDto, long id) {
         //  Question, why do we need to find it out firstly?
+        logger.info("<< updatePost {} {}", postDto, id);
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
         post.setTitle(postDto.getTitle());
         post.setDescription(postDto.getDescription());
         post.setContent(postDto.getContent());
 
         Post updatePost = postRepository.save(post);
+        logger.info(">> updatePost");
         return modelMapper.map(updatePost, PostDto.class);
     }
 
     @Override
     public void deletePostById(long id) {
+        logger.info("<< deletePostById {}", id);
         //  Question, why do we need to find it out firstly?
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
         postRepository.delete(post);
+        logger.info(">> deletePostById");
     }
 
     @Override
     public PostResponse getAllPost(int pageNo, int pageSize, String sortBy, String sortDir) {
-
+        logger.info("<< getAllPost {} {} {} {}", pageNo, pageSize, sortBy, sortDir);
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
 
@@ -127,6 +138,7 @@ public class PostServiceImpl implements PostService {
         postResponse.setTotalElements(pagePosts.getTotalElements());
         postResponse.setTotalPages(pagePosts.getTotalPages());
         postResponse.setLast(pagePosts.isLast());
+        logger.info(">> getAllPost");
         return postResponse;
     }
 }
