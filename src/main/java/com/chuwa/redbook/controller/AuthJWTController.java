@@ -51,6 +51,7 @@ public class AuthJWTController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthJWTController.class);
 
+    // JWT token will be returned
     @PostMapping("/signin")
     public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDto loginDto) {
         logger.info(loginDto.getAccountOrEmail() + "is trying to sign in our application");
