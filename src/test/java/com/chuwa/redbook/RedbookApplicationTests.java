@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+// Integration test
 @SpringBootTest
 class RedbookApplicationTests {
 
@@ -22,8 +23,8 @@ class RedbookApplicationTests {
     @Test
 	void testCreatePost() {
         PostDto postDto = new PostDto();
-        postDto.setTitle("title");
-        postDto.setContent("content");
+        postDto.setTitle("test");
+        postDto.setContent("new test");
         postDto.setDescription("description");
         postService.createPost(postDto);
 

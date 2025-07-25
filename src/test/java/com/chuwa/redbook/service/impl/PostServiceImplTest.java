@@ -91,15 +91,19 @@ class PostServiceImplTest {
     @Test
     public void testCreatePostWithMockedModelMapper() {
         // Define modelMapper's two different behaviors (different converting sources and targets)
-        Mockito.when(mockedModelMapper.map(ArgumentMatchers.any(PostDto.class), ArgumentMatchers.eq(Post.class))).thenReturn(post);
-        Mockito.when(mockedModelMapper.map(ArgumentMatchers.any(Post.class), ArgumentMatchers.eq(PostDto.class))).thenReturn(postDto);
+        // Stubbing
+        Mockito.when(mockedModelMapper.map(postDto, Post.class)).thenReturn(post);
+        Mockito.when(mockedModelMapper.map(post, PostDto.class)).thenReturn(postDto);
         Mockito.when(postRepositoryMock.save(ArgumentMatchers.any())).thenReturn(post);
+
+        // Invoke method to be tested
         PostDto postResponse = postService.createPost(postDto);
 
         // assertions
         Assertions.assertEquals(postDto.getTitle(), postResponse.getTitle());
         Assertions.assertEquals(postDto.getDescription(), postResponse.getDescription());
         Assertions.assertEquals(postDto.getContent(), postResponse.getContent());
+        Mockito.verify(postRepositoryMock, Mockito.times(1)).save(post);
     }
 
 //    @Test
