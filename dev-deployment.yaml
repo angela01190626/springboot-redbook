@@ -14,17 +14,17 @@ spec:
     spec:
       containers:
         - name: redbook
-          image: redbook:latest
+          image: redbook-app:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://192.168.5.13:3306/redbook?allowPublicKeyRetrieval=true&useSSL=false
+              value: jdbc:mysql://host.docker.internal:3307/chuwa?allowPublicKeyRetrieval=true&useSSL=false
             - name: SPRING_DATASOURCE_USERNAME
-              value: chuwa
+              value: root
             - name: SPRING_DATASOURCE_PASSWORD
-              value: chuwa
+              value: "123456"
 
 ---
 apiVersion: v1

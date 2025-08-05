@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   app:
-    image: springboot-redbook-app
+    image: redbook-app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8888:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/redbook?useSSL=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/chuwa?useSSL=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=secret
+      - SPRING_DATASOURCE_PASSWORD=01190626
     depends_on:
       - db
     networks:
@@ -20,8 +20,8 @@ services:
   db:
     image: mysql:5.7
     environment:
-      MYSQL_DATABASE: redbook
-      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: chuwa
+      MYSQL_ROOT_PASSWORD: 01190626
     volumes:
       - db-data:/var/lib/mysql
     networks:
